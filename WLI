@@ -1,0 +1,28 @@
+local function notify(msg)
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Rohub V2 Premium",
+        Text = msg
+    })
+end
+
+local res = (request or http_request or syn and syn.request)({
+    Url = "https://api.luauth.xyz/hwid",
+    Method = "GET"
+})
+
+if res.Success then
+	--[[local hwid = string.match(res.Body, "`(%w+)`")   -- for some fucking reason this breaks all the time
+	if hwid then
+        setclipboard(hwid)
+        notify("Your HWID has been set to your clipboard")
+        return
+    end]]
+    local index = string.find(res.Body, "Executor Name:")
+    if index then
+        setclipboard(string.sub(res.Body, 19, index - 5))
+        notify("Your HWID has been set to your clipboard")
+        return
+    end
+end
+
+notify("We were unable to grab your HWID. Your executor is likely not supported")
